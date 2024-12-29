@@ -15,12 +15,15 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 
 from django.contrib.auth.forms import UserCreationForm
 
 def home(request):
     return render(request, 'home.html')
 
+@login_required
 def table(request):
     derniere_ligne = Dht11.objects.last()
     derniere_date = Dht11.objects.last().dt
@@ -32,6 +35,7 @@ def table(request):
     valeurs = {'date': temps_ecoule, 'id': derniere_ligne.id, 'temp': derniere_ligne.temp, 'hum': derniere_ligne.hum}
     return render(request, 'value.html', {'valeurs': valeurs})
 
+@login_required
 def download_csv(request):
     model_values = Dht11.objects.all()
     response = HttpResponse(content_type='text/csv')
@@ -43,16 +47,20 @@ def download_csv(request):
         writer.writerow(row)
     return response
 #pour afficher navbar de template
+@login_required
 def index_view(request):
     return render(request, 'index.html')
 
 #pour afficher les graphes
+@login_required
 def graphiqueTemp(request):
     return render(request, 'ChartTemp.html')
 # récupérer toutes les valeur de température et humidity sous forme un #fichier json
+@login_required
 def graphiqueHum(request):
     return render(request, 'ChartHum.html')
 # récupérer toutes les valeur de température et humidity sous forme un #fichier json
+@login_required
 def chart_data(request):
     dht = Dht11.objects.all()
 
@@ -62,6 +70,7 @@ def chart_data(request):
         'humidity': [Hum.hum for Hum in dht]
     }
     return JsonResponse(data)
+@login_required
 def chart_data(request):
     dht = Dht11.objects.all()
 
@@ -74,6 +83,7 @@ def chart_data(request):
 
 #pour récupérer les valeurs de température et humidité de dernier 24h
 # et envoie sous forme JSON
+@login_required
 def chart_data_jour(request):
     dht = Dht11.objects.all()
     now = timezone.now()
@@ -92,6 +102,7 @@ def chart_data_jour(request):
 
 #pour récupérer les valeurs de température et humidité de dernier semaine
 # et envoie sous forme JSON
+@login_required
 def chart_data_semaine(request):
     dht = Dht11.objects.all()
     # calcul de la date de début de la semaine dernière
@@ -112,6 +123,7 @@ def chart_data_semaine(request):
 
 #pour récupérer les valeurs de température et humidité de dernier moins
 # et envoie sous forme JSON
+@login_required
 def chart_data_mois(request):
     dht = Dht11.objects.all()
 
@@ -130,7 +142,7 @@ def chart_data_mois(request):
     return JsonResponse(data)
 
 
-
+@login_required
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -141,10 +153,15 @@ def register(request):
         form = UserCreationForm()
     return render(request, 'register.html', {'form': form})
 
-
+@login_required
 def sendtele():
     token = '6662023260:AAG4z48OO9gL8A6szdxg0SOma5hv9gIII1E'
     rece_id = 1242839034
     bot = telepot.Bot(token)
     bot.sendMessage(rece_id, 'la température depasse la normale')
     print(bot.sendMessage(rece_id, 'OK.'))
+
+def custom_logout(request):
+    logout(request)
+    return redirect('/')
+

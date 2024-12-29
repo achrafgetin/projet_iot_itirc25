@@ -16,5 +16,7 @@ urlpatterns = [
     path('chart-data-semaine/',views.chart_data_semaine,name='chart-data-semaine'),
     path('chart-data-mois/',views.chart_data_mois,name='chart-data-mois'),
     path('', views.home, name='home'),
+    path('login/', auth_views.LoginView.as_view(template_name='login.html'),name='login'),
+    path('logout/', views.custom_logout, name='logout'),
 
 ]

@@ -22,7 +22,7 @@ body{
 }
 nav{
 
-    background-color: #01377D;
+    background-color: #01187d;
     border: solid 2px ;
     border-color: rgba(47,126,178,0.32);
     display: flex;
@@ -47,7 +47,7 @@ nav ul li{display: inline;
 
 nav ul li a:hover{
 
-    color:yellow;
+    color:white;
     transition: 0.3s;
 }
 nav ul li a{
