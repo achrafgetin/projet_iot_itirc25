@@ -36,32 +36,32 @@ def Dlist(request):
                 serial.save()
                 derniere_temperature = Dht11.objects.last().temp
                 print(derniere_temperature)
-
+                """
                 if derniere_temperature > 25:
                     # Alert Email
                     subject = 'Alerte'
                     message = 'La température dépasse le seuil de 25°C, veuillez intervenir immédiatement pour vérifier et corriger cette situation'
                     email_from = settings.EMAIL_HOST_USER
-                    recipient_list = ['abidihajji46@gmail.com']
+                    recipient_list = ['']
                     send_mail(subject, message, email_from, recipient_list)
 
                     # Alert WhatsApp
                    
-                    account_sid = 'AC967737acc3b5c9288688dd7481ef029c'
-                    auth_token = 'c4ae755f579949d54bf00ce0725a72fa'
+                    account_sid = ''
+                    auth_token = ''
                     client = Client(account_sid, auth_token)
                     message_whatsapp = client.messages.create(
                     from_='whatsapp:+14155238886',
                     body='La température dépasse le seuil de 25°C, veuillez intervenir immédiatement pour vérifier et corriger cette situation',
-                    to='whatsapp:+212620671238'
+                    to='whatsapp:'
                     )
 
                     #Alert Telegram
-                    telegram_token = '7931512511:AAGmZPVuEmgrtYrph-o3E7lZ7DqXQelmWl4'
-                    chat_id = '6556570945'  # Remplacez par votre ID de chat
+                    telegram_token = ''
+                    chat_id = ''  # Remplacez par votre ID de chat
                     telegram_message = 'La température dépasse le seuil de 25°C, veuillez intervenir immédiatement pour vérifier et corriger cette situation'
                     send_telegram_message(telegram_token, chat_id, telegram_message)
-
+                """
                 return Response(serial.data, status=status.HTTP_201_CREATED)
 
             else:
