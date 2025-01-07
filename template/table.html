@@ -1,26 +1,32 @@
 {% extends 'base.html' %}
-{% block i %}
-<div class="projects">
-  <div class ="tables" >
-<table  border="0">
-
-    <thead class="DIV">
-        <tr>
-            <th>id</th>
-            <th>Temperature</th>
-            <th>Humidity</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for record in data %}
-        <tr>
-            <td>{{ record.id }}</td>
-            <td>{{ record.temp }}</td>
-            <td>{{ record.hum }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Table des Mesures</h1>
 </div>
-  </div>
-{% endblock i %}
+
+<div class="card mb-4">
+    <div class="card-header">
+        Dernières Mesures
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Température</th>
+                    <th>Humidité</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in data %}
+                <tr>
+                    <td>{{ record.id }}</td>
+                    <td>{{ record.temp }}</td>
+                    <td>{{ record.hum }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

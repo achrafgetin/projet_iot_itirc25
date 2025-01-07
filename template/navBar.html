@@ -1,32 +1,24 @@
+<div class="navbar navbar-dark bg-dark">
+    <nav class="container-fluid">
+        <a class="navbar-brand" href="#">SURVEILLANCE IOT: CAPTEUR DHT11</a>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'table' %}">Table</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'myChartTemp' %}">Graph of Temperature</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'myChartHum' %}">Graph of Humidity</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'json' %}">Json</a>
+            </li>
+       
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">Json</a>
+            </li>
 
-  <div class="navbar">
-    <nav >
-        <h2 class="logo">SURVEILLANCE IOT:CAPTEUR DHT11</h2>
-
-            <ul>
-                    <li>  <a href="{% url 'table' %}" >Table</a></li>
-                    <li>  <a href="{% url 'myChartTemp' %}" >graph of temperature</a></li>
-                    <li>  <a href="{% url 'myChartHum' %}" >graph of humidity</a></li>
-                    <li>  <a href="{% url 'json' %}" >Json</a></li>
-
-
-            </ul>
-            <form method="post" action="{% url 'table' %}">
-                {% csrf_token %}
-
-                <select id="select" name="select_field">
-
-                  <option value="signup" selected>S'inscrire</option>
-                  <option value="logout">Se déconnecter</option>
-                </select>
-
-              </form>
-            <p>  </p>
-
-
+    </ul>
     </nav>
 </div>
-   <br>
-   <br>
-   <br>
-  <br>
