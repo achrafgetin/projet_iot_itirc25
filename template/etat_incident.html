@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4 display-4">État des Incidents</h1>
+
+    <!-- Carte pour afficher l'état des incidents -->
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-gradient-primary text-white">
+            <h5 class="card-title mb-0"><i class="fas fa-exclamation-triangle me-2"></i> État Actuel</h5>
+        </div>
+        <div class="card-body">
+            {% if incident_ouvert %}
+                <!-- Incident en cours -->
+                <div class="alert alert-danger d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <img src="{% static 'images/alert.png' %}" alt="Incident" class="img-fluid" style="width: 60px;">
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h5 class="card-title"><i class="fas fa-fire me-2"></i> Incident en cours</h5>
+                        <p class="card-text">
+                            <strong>Date de début :</strong> {{ incident_ouvert.date_debut }}<br>
+                            <strong>Itérations :</strong> {{ incident_ouvert.iterations }}
+                        </p>
+                    </div>
+                </div>
+            {% else %}
+                <!-- Aucun incident en cours -->
+                <div class="alert alert-success d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <img src="{% static 'images/incident.png' %}" alt="Aucun incident" class="img-fluid" style="width: 60px;">
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h5 class="card-title"><i class="fas fa-check-circle me-2"></i> Aucun incident en cours</h5>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Bouton pour accéder à l'historique des incidents -->
+    <div class="text-center mt-4">
+        <a href="{% url 'historique_incidents' %}" class="btn btn-secondary btn-lg">
+            <i class="fas fa-history me-2"></i> Voir l'Historique des Incidents
+        </a>
+    </div>
+</div>
+
+<!-- Styles CSS personnalisés -->
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Roboto', sans-serif;
+    }
+    .card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+    .card-header {
+        border-radius: 15px 15px 0 0;
+        background: linear-gradient(45deg, #007bff, #00bcd4);
+    }
+    .alert {
+        border-radius: 10px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+    }
+    .alert-danger {
+        background-color: #ffebee;
+        border-color: #ffcdd2;
+        color: #c62828;
+    }
+    .alert-success {
+        background-color: #e8f5e9;
+        border-color: #c8e6c9;
+        color: #2e7d32;
+    }
+    .btn-secondary {
+        background-color: #6c757d;
+        border: none;
+        padding: 12px 24px;
+        font-size: 18px;
+        border-radius: 30px;
+        transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .bg-gradient-primary {
+        background: linear-gradient(45deg, #007bff, #00bcd4);
+    }
+    .img-fluid {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
+{% endblock %}

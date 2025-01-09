@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4 display-4">Historique des Incidents</h1>
+
+    <!-- Carte pour afficher l'historique des incidents -->
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-gradient-primary text-white">
+            <h5 class="card-title mb-0"><i class="fas fa-history me-2"></i> Historique</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="thead-light">
+                        <tr>
+                            <th><i class="fas fa-calendar-alt me-2"></i> Date de début</th>
+                            <th><i class="fas fa-calendar-times me-2"></i> Date de fin</th>
+                            <th><i class="fas fa-sync-alt me-2"></i> Itérations</th>
+                            <th><i class="fas fa-bell me-2"></i> Alertes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for incident in incidents %}
+                        <tr>
+                            <td>{{ incident.date_debut }}</td>
+                            <td>{{ incident.date_fin|default:"-" }}</td>
+                            <td><span class="badge bg-warning text-dark">{{ incident.iterations }}</span></td>
+                            <td>
+                                <ul class="list-unstyled">
+                                    {% for alerte in incident.alertes.all %}
+                                    <li class="mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-exclamation-circle me-2 text-danger"></i>
+                                            <div>
+                                                <strong>{{ alerte.date_envoi }}</strong><br>
+                                                {{ alerte.message }} ({{ alerte.utilisateurs_avertis }})
+                                            </div>
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Styles CSS personnalisés -->
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Roboto', sans-serif;
+    }
+    .card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+    .card-header {
+        border-radius: 15px 15px 0 0;
+        background: linear-gradient(45deg, #007bff, #00bcd4);
+    }
+    .table {
+        margin-bottom: 0;
+    }
+    .table thead th {
+        background-color: #e9ecef;
+        border-bottom: 2px solid #dee2e6;
+        font-weight: 600;
+    }
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.05);
+    }
+    .badge {
+        font-size: 14px;
+        padding: 8px 12px;
+        border-radius: 20px;
+    }
+    .list-unstyled {
+        margin-bottom: 0;
+    }
+    .text-danger {
+        color: #dc3545 !important;
+    }
+    .bg-gradient-primary {
+        background: linear-gradient(45deg, #007bff, #00bcd4);
+    }
+</style>
+{% endblock %}

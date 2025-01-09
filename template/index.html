@@ -59,3 +59,49 @@
     </div>
 </div>
 {% endblock %}
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Tableau de Bord</h1>
+
+    <!-- Boutons pour naviguer vers les pages des incidents -->
+    <div class="row mb-4">
+        <div class="col-md-6 text-center">
+            <a href="{% url 'etat_incident' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-exclamation-triangle"></i> État des Incidents
+            </a>
+        </div>
+        <div class="col-md-6 text-center">
+            <a href="{% url 'historique_incidents' %}" class="btn btn-secondary btn-lg">
+                <i class="fas fa-history"></i> Historique des Incidents
+            </a>
+        </div>
+    </div>
+
+    <!-- Contenu existant du tableau de bord -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    Température Actuelle
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ valeurs.temp }} °C</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    Humidité Actuelle
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ valeurs.hum }} %</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Autres éléments du tableau de bord... -->
+</div>
+{% endblock %}

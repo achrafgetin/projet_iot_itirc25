@@ -1,21 +1,39 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Graphique d'Humidité</h1>
-</div>
+<div class="container mt-5">
+    <h1 class="text-center mb-4 display-4">Graphique d'Humidité</h1>
 
-<div class="btn-toolbar mb-2 mb-md-0">
-    <div class="btn-group mr-2">
-        <button id="aujourdhui-link" class="btn btn-sm btn-outline-secondary">Aujourd'hui</button>
-        <button id="semaine-link" class="btn btn-sm btn-outline-secondary">Cette Semaine</button>
-        <button id="mois-link" class="btn btn-sm btn-outline-secondary">Ce Mois</button>
+    <!-- Boutons pour filtrer les données -->
+    <div class="btn-toolbar mb-4 justify-content-center">
+        <div class="btn-group">
+            <button id="aujourdhui-link" class="btn btn-outline-primary">
+                <i class="fas fa-calendar-day me-2"></i> Aujourd'hui
+            </button>
+            <button id="semaine-link" class="btn btn-outline-primary">
+                <i class="fas fa-calendar-week me-2"></i> Cette Semaine
+            </button>
+            <button id="mois-link" class="btn btn-outline-primary">
+                <i class="fas fa-calendar-alt me-2"></i> Ce Mois
+            </button>
+        </div>
+    </div>
+
+    <!-- Graphique -->
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-gradient-primary text-white">
+            <h5 class="card-title mb-0"><i class="fas fa-tint me-2"></i> Humidité (%)</h5>
+        </div>
+        <div class="card-body">
+            <canvas class="my-4 w-100" id="graphique-hum" height="400"></canvas>
+        </div>
     </div>
 </div>
 
-<canvas class="my-4 w-100" id="graphique-hum" height="380"></canvas>
-
+<!-- Scripts pour Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@1.3.0/dist/chartjs-plugin-zoom.min.js"></script>
+
+<!-- Script pour initialiser le graphique -->
 <script>
     const createChart = (url, borderWidth) => {
         fetch(url)
@@ -78,6 +96,7 @@
             });
     };
 
+    // Écouteurs d'événements pour les boutons
     document.getElementById('aujourdhui-link').addEventListener('click', () => createChart('/chart-data-jour/', 2));
     document.getElementById('semaine-link').addEventListener('click', () => createChart('/chart-data-semaine/', 2));
     document.getElementById('mois-link').addEventListener('click', () => createChart('/chart-data-mois/', 2));
@@ -85,4 +104,38 @@
     // Charge initiale du graphique
     createChart('/chart-data/', 2);
 </script>
+
+<!-- Styles CSS personnalisés -->
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Roboto', sans-serif;
+    }
+    .card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+    .card-header {
+        border-radius: 15px 15px 0 0;
+        background: linear-gradient(45deg, #007bff, #00bcd4);
+    }
+    .btn-outline-primary {
+        border-color: #007bff;
+        color: #007bff;
+        transition: all 0.3s ease;
+    }
+    .btn-outline-primary:hover {
+        background-color: #007bff;
+        color: #fff;
+    }
+    .bg-gradient-primary {
+        background: linear-gradient(45deg, #007bff, #00bcd4);
+    }
+</style>
 {% endblock %}

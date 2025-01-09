@@ -19,6 +19,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 
 from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render
+from .models import Incident
 
 def home(request):
     return render(request, 'home.html')
@@ -165,3 +167,18 @@ def custom_logout(request):
     logout(request)
     return redirect('/')
 
+def etat_incident(request):
+    # Récupérer l'incident ouvert (s'il existe)
+    incident_ouvert = Incident.objects.filter(est_ouvert=True).first()
+    contexte = {
+        'incident_ouvert': incident_ouvert,
+    }
+    return render(request, 'etat_incident.html', contexte)
+
+def historique_incidents(request):
+    # Récupérer tous les incidents (ouverts et fermés)
+    incidents = Incident.objects.all().order_by('-date_debut')
+    contexte = {
+        'incidents': incidents,
+    }
+    return render(request, 'historique_incidents.html', contexte)
