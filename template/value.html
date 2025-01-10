@@ -1,47 +1,161 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container mt-5">
-    <h1 class="text-center mb-4 display-4">Dernière Mesure</h1>
+    <h1 class="text-center mb-4 display-4 animate__animated animate__fadeIn">Dernière Mesure</h1>
 
-    <!-- Carte pour afficher les détails de la mesure -->
-    <div class="card shadow-lg border-0">
-        <div class="card-header bg-gradient-primary text-white">
-            <h5 class="card-title mb-0"><i class="fas fa-info-circle me-2"></i> Détails de la Mesure</h5>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="thead-light">
-                        <tr>
-                            <th><i class="fas fa-tag me-2"></i> Nom</th>
-                            <th><i class="fas fa-thermometer-half me-2"></i> Température</th>
-                            <th><i class="fas fa-tint me-2"></i> Humidité</th>
-                            <th><i class="fas fa-clock me-2"></i> Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><a href="{% url 'myChartTemp' %}" class="text-decoration-none text-primary">DHT 11</a></td>
-                            <td><span class="badge bg-warning text-dark">{{ valeurs.temp }} °C</span></td>
-                            <td><span class="badge bg-info text-white">{{ valeurs.hum }} %</span></td>
-                            <td><span class="text-muted">{{ valeurs.date }}</span></td>
-                        </tr>
-                    </tbody>
-                </table>
+    <!-- Section pour les indicateurs clés -->
+    <div class="row mb-4">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0 animate__animated animate__fadeInLeft">
+                <div class="card-body text-center">
+                    <h5 class="card-title"><i class="fas fa-thermometer-half me-2"></i> Température Actuelle</h5>
+                    <p class="display-4 text-primary">{{ valeurs.temp }} °C</p>
+                    <div class="progress mt-3">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ valeurs.temp }}%;" aria-valuenow="{{ valeurs.temp }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="text-muted mt-2">Dernière mise à jour : {{ valeurs.date }}</p>
+                </div>
             </div>
-            <p class="text-muted mt-3">
-                <i class="fas fa-info-circle me-2"></i> Ce tableau présente les mesures actuelles de température et d'humidité enregistrées par le capteur DHT11. Ces données sont essentielles pour surveiller et ajuster les conditions environnementales en temps réel.
-            </p>
+        </div>
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0 animate__animated animate__fadeInRight">
+                <div class="card-body text-center">
+                    <h5 class="card-title"><i class="fas fa-tint me-2"></i> Humidité Actuelle</h5>
+                    <p class="display-4 text-info">{{ valeurs.hum }} %</p>
+                    <div class="progress mt-3">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: {{ valeurs.hum }}%;" aria-valuenow="{{ valeurs.hum }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="text-muted mt-2">Dernière mise à jour : {{ valeurs.date }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section pour les graphiques -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm border-0 animate__animated animate__fadeInUp">
+                <div class="card-header bg-gradient-primary text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-chart-line me-2"></i> Évolution de la Température et de l'Humidité</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="mesuresChart" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section pour les détails de la mesure -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-sm border-0 animate__animated animate__fadeInUp">
+                <div class="card-header bg-gradient-primary text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-info-circle me-2"></i> Détails de la Mesure</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th><i class="fas fa-tag me-2"></i> Nom</th>
+                                    <th><i class="fas fa-thermometer-half me-2"></i> Température</th>
+                                    <th><i class="fas fa-tint me-2"></i> Humidité</th>
+                                    <th><i class="fas fa-clock me-2"></i> Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><a href="{% url 'myChartTemp' %}" class="text-decoration-none text-primary">DHT 11</a></td>
+                                    <td><span class="badge bg-warning text-dark">{{ valeurs.temp }} °C</span></td>
+                                    <td><span class="badge bg-info text-white">{{ valeurs.hum }} %</span></td>
+                                    <td><span class="text-muted">{{ valeurs.date }}</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="text-muted mt-3">
+                        <i class="fas fa-info-circle me-2"></i> Ce tableau présente les mesures actuelles de température et d'humidité enregistrées par le capteur DHT11. Ces données sont essentielles pour surveiller et ajuster les conditions environnementales en temps réel.
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Bouton pour télécharger le CSV -->
-    <div class="text-center mt-4">
+    <div class="text-center mt-4 animate__animated animate__fadeInUp">
         <button id="csv" class="btn btn-success btn-lg">
             <i class="fas fa-download me-2"></i> Télécharger CSV
         </button>
     </div>
 </div>
+
+<!-- Scripts pour Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@1.3.0/dist/chartjs-plugin-zoom.min.js"></script>
+
+<!-- Script pour initialiser le graphique -->
+<script>
+    // Données pour le graphique
+    const ctx = document.getElementById('mesuresChart').getContext('2d');
+    const mesuresChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['1h', '2h', '3h', '4h', '5h', '6h'], // Exemple de labels
+            datasets: [{
+                label: 'Température (°C)',
+                data: [20, 22, 21, 23, 22, 24], // Exemple de données
+                borderColor: '#007bff',
+                backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                borderWidth: 2,
+                fill: true,
+            }, {
+                label: 'Humidité (%)',
+                data: [50, 52, 51, 53, 52, 54], // Exemple de données
+                borderColor: '#17a2b8',
+                backgroundColor: 'rgba(23, 162, 184, 0.2)',
+                borderWidth: 2,
+                fill: true,
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    title: {
+                        display: true,
+                        text: 'Valeurs'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Temps'
+                    }
+                }
+            },
+            plugins: {
+                zoom: {
+                    zoom: {
+                        wheel: {
+                            enabled: true,
+                            speed: 0.1,
+                            modifierKey: 'ctrl',
+                        },
+                        pinch: {
+                            enabled: true
+                        },
+                        mode: 'xy',
+                    },
+                    pan: {
+                        enabled: true,
+                        mode: 'xy',
+                    }
+                }
+            }
+        }
+    });
+</script>
 
 <!-- Script pour le téléchargement du CSV -->
 <script>
@@ -75,36 +189,44 @@
         background-color: #f8f9fa;
         font-family: 'Roboto', sans-serif;
     }
+
     .card {
         border: none;
         border-radius: 15px;
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+
     .card:hover {
         transform: translateY(-5px);
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     }
+
     .card-header {
         border-radius: 15px 15px 0 0;
         background: linear-gradient(45deg, #007bff, #00bcd4);
     }
+
     .table {
         margin-bottom: 0;
     }
+
     .table thead th {
         background-color: #e9ecef;
         border-bottom: 2px solid #dee2e6;
         font-weight: 600;
     }
+
     .table-hover tbody tr:hover {
         background-color: rgba(0, 123, 255, 0.05);
     }
+
     .badge {
         font-size: 14px;
         padding: 8px 12px;
         border-radius: 20px;
     }
+
     .btn-success {
         background-color: #28a745;
         border: none;
@@ -113,19 +235,27 @@
         border-radius: 30px;
         transition: all 0.3s ease;
     }
+
     .btn-success:hover {
         background-color: #218838;
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
+
     .text-primary {
         color: #007bff !important;
     }
+
     .text-muted {
         color: #6c757d !important;
     }
+
     .bg-gradient-primary {
         background: linear-gradient(45deg, #007bff, #00bcd4);
+    }
+
+    .animate__animated {
+        animation-duration: 1s;
     }
 </style>
 {% endblock %}

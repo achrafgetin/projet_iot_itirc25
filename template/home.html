@@ -4,50 +4,73 @@
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accueil</title>
+    <title>Accueil - IoT Dashboard</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <style>
         body {
-            background-image: linear-gradient(to bottom right, rgb(77, 228, 248), rgba(0, 0, 0, 0.7)), 
-                              url("{% static 'images/accueil.webp' %}");
+            background-image: linear-gradient(to bottom right, rgba(77, 228, 248, 0.7), rgba(0, 0, 0, 0.7)), 
+                              url("{% static 'images/iot.jpg' %}");
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
             color: white;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Poppins', sans-serif;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Overlay sombre pour améliorer la lisibilité */
+        body::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6); /* Fond sombre pour contraster avec le texte */
+            z-index: 1;
         }
 
         .content {
-            background-color: rgba(34, 246, 1, 0.622);
-            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
             border-radius: 15px;
-            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
-            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             max-width: 800px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            animation: fadeIn 1.5s ease-out;
         }
 
         h1 {
-            font-size: 2.8rem;
+            font-size: 3rem;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             margin-bottom: 20px;
-            background: linear-gradient(90deg, #2005e9, #250af1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            animation: fadeInDown 1s ease-out;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Ombre du texte */
         }
 
         p {
             font-size: 1.2rem;
             line-height: 1.8;
             margin-bottom: 30px;
+            animation: fadeInUp 1s ease-out 0.5s;
+            animation-fill-mode: both;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .btn-custom {
@@ -60,6 +83,8 @@
             border-radius: 50px;
             transition: all 0.3s ease-in-out;
             box-shadow: 0px 4px 10px rgba(0, 123, 255, 0.5);
+            animation: fadeInUp 1s ease-out 1s;
+            animation-fill-mode: both;
         }
 
         .btn-custom:hover {
@@ -67,16 +92,125 @@
             transform: scale(1.1);
             box-shadow: 0px 6px 15px rgba(0, 123, 255, 0.7);
         }
+
+        /* Icônes IoT */
+        .iot-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .iot-icons .icon {
+            font-size: 2.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .iot-icons .icon:hover {
+            color: #007bff;
+            transform: translateY(-5px);
+        }
+
+        /* Effet de particules */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float 5s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(0) translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="content">
-        <h1>Bienvenue sur notre site</h1>
-        <p>
-            Explorez l'univers passionnant de l'Internet des Objets (IoT). Consultez des données en temps réel, découvrez des tableaux dynamiques et analysez des graphiques intuitifs. Accédez également à nos données JSON pour une immersion totale. 
-        </p>
-        <a href="{% url 'table' %}" class="btn btn-custom">Accéder à l'application</a>
+    <!-- Effet de particules -->
+    <div class="particles">
+        <div class="particle" style="top: 10%; left: 20%; animation-delay: 0s;"></div>
+        <div class="particle" style="top: 30%; left: 50%; animation-delay: 1s;"></div>
+        <div class="particle" style="top: 70%; left: 80%; animation-delay: 2s;"></div>
+        <div class="particle" style="top: 50%; left: 10%; animation-delay: 3s;"></div>
+        <div class="particle" style="top: 90%; left: 40%; animation-delay: 4s;"></div>
     </div>
+
+    <!-- Contenu principal -->
+    <div class="content">
+        <h1>Bienvenue sur IoT Dashboard</h1>
+        <p>
+            Explorez l'univers passionnant de l'Internet des Objets (IoT). Consultez des données en temps réel, découvrez des tableaux dynamiques et analysez des graphiques intuitifs. Accédez également à nos données JSON pour une immersion totale.
+        </p>
+
+        <!-- Icônes IoT -->
+        <div class="iot-icons">
+            <div class="icon"><i class="fas fa-temperature-low"></i></div>
+            <div class="icon"><i class="fas fa-tint"></i></div>
+            <div class="icon"><i class="fas fa-microchip"></i></div>
+            <div class="icon"><i class="fas fa-network-wired"></i></div>
+        </div>
+
+        <!-- Bouton Accéder à l'application -->
+        <a href="{% url 'table' %}" class="btn btn-custom">
+            <i class="fas fa-play-circle me-2"></i> Accéder à l'application
+        </a>
+    </div>
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
