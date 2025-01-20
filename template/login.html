@@ -1,10 +1,12 @@
 {% extends 'authen.html' %}
 {% block content %}
+{% load static %}
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-    <div class="card p-4 shadow-lg" style="width: 100%; max-width: 400px; border-radius: 15px;">
+    <div class="card p-4 shadow-lg" style="width: 100%; max-width: 600px; border-radius: 50px; background: rgba(129, 253, 245, 0.9); backdrop-filter: blur(4px);">
         <div class="text-center mb-4">
+            <img src="{% static 'images/depos.jpg' %}" alt="IT Logo" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 20px;">
+            <h3 class="text-center mb-4 text-primary">Connexion</h3>
         </div>
-        <h3 class="text-center mb-4 text-secondary">Connexion</h3>
         {% if message %}
             <div class="alert alert-danger text-center animate__animated animate__fadeInDown">
                 {{ message }}
@@ -12,9 +14,94 @@
         {% endif %}
         <form method="POST">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+            <div class="mb-3">
+                <label for="username" class="form-label">
+                    <i class="fas fa-user fa-lg me-2"></i> Nom d'utilisateur
+                </label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">
+                    <i class="fas fa-lock fa-lg me-2"></i> Mot de passe
+                </label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 py-2 mb-3" style="background: linear-gradient(135deg, #6a11cb, #2575fc); border: none;">
+                <i class="fas fa-sign-in-alt me-2"></i> Se connecter
+            </button>
+            <!-- Lien "Mot de passe oublié ?" -->
+            <div class="text-center mb-3">
+                <a href="#" class="text-decoration-none text-primary">Mot de passe oublié ?</a>
+            </div>
         </form>
+        <!-- Option "Créer un compte" -->
+        <div class="text-center">
+            <p class="mb-0">Pas encore de compte ? <a href="#" class="text-decoration-none text-primary">Créer un compte</a></p>
+        </div>
     </div>
 </div>
+
+<!-- Styles CSS personnalisés -->
+<style>
+    body {
+        background-image: url("{% static 'images/pngt.png' %}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        border: none;
+        border-radius: 10px;
+        transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #2575fc, #6a11cb);
+        transform: translateY(-2px);
+    }
+
+    .alert {
+        border-radius: 10px;
+    }
+
+    .form-control {
+        border-radius: 10px;
+        padding: 10px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #6a11cb;
+        box-shadow: 0 0 5px rgba(106, 17, 203, 0.5);
+    }
+
+    .text-primary {
+        color: #6a11cb !important;
+        transition: color 0.3s ease;
+    }
+
+    .text-primary:hover {
+        color: #2575fc !important;
+    }
+
+    .fa-lg {
+        font-size: 1.25rem;
+    }
+</style>
 {% endblock content %}
