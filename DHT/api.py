@@ -85,25 +85,25 @@ def Dlist(request):
                 subject = 'Alerte'
                 message = 'La température dépasse le seuil de 20°C, veuillez intervenir immédiatement pour vérifier et corriger cette situation'
                 email_from = settings.EMAIL_HOST_USER
-                recipient_list = ['YOUR_EMAIL']
+                recipient_list = ['abidihajji46@gmail.com']
                 send_mail(subject, message, email_from, recipient_list)
 
                 # Alert WhatsApp
                 """
-                account_sid = 'YOUR_account_sid'
-                auth_token = 'YOUR_API_KEY'
+                account_sid = 'AC967737acc3b5c9288688dd7481ef029c'
+                auth_token = 'c4ae755f579949d54bf00ce0725a72fa'
                 client = Client(account_sid, auth_token)
                 message_whatsapp = client.messages.create(
                     from_='whatsapp:+14155238886',
                     body='La température dépasse le seuil de 20°C, veuillez intervenir immédiatement pour vérifier et corriger cette situation',
-                    to='whatsapp:+YOUR_NUMBER'
+                    to='whatsapp:+212620671238'
                 
                 )
                 """
 
                 # Alert Telegram
-                telegram_token = 'YOUR_telegram_KEY'
-                chat_id = 'CHAT_KEY'  # Remplacez par votre ID de chat
+                telegram_token = '7931512511:AAGmZPVuEmgrtYrph-o3E7lZ7DqXQelmWl4'
+                chat_id = '6556570945'  # Remplacez par votre ID de chat
                 telegram_message = 'La température dépasse le seuil de 20°C, veuillez intervenir immédiatement pour vérifier et corriger cette situation'
                 send_telegram_message(telegram_token, chat_id, telegram_message)
 
