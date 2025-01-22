@@ -37,18 +37,55 @@
                 </button>
             </div>
             <!-- Graphique -->
-            <canvas class="my-4 w-100" id="graphique-hum" height="400"></canvas>
+            <canvas class="my-4 w-80" id="graphique-hum" height="120"></canvas>
         </div>
     </div>
 </div>
 
 <!-- Scripts pour Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@1.3.0/dist/chartjs-plugin-zoom.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
 
 <!-- Script pour initialiser le graphique -->
 <script>
-    const createChart = (url, borderWidth) => {
+    // Enregistre le plugin de zoom
+    Chart.register(ChartZoom);
+
+    // Objet global pour stocker les limites des axes pour chaque période
+    const chartLimits = {
+        aujourdhui: null,
+        semaine: null,
+        mois: null,
+    };
+
+    // Variable pour stocker la période actuelle
+    let currentPeriod = 'aujourdhui';
+
+    // Fonction pour détruire le graphique existant et sauvegarder les limites
+    const destroyChart = () => {
+        if (window.myChart) {
+            // Stocker les limites actuelles des axes pour la période actuelle
+            const xScale = window.myChart.scales.x;
+            const yScale = window.myChart.scales.y;
+            chartLimits[currentPeriod] = {
+                xMin: xScale.min,
+                xMax: xScale.max,
+                yMin: yScale.min,
+                yMax: yScale.max,
+            };
+            window.myChart.destroy(); // Détruit le graphique existant
+            window.myChart = null;    // Réinitialise la variable
+        }
+    };
+
+    // Fonction pour créer un nouveau graphique
+    const createChart = (url, borderWidth, period) => {
+        // Détruit le graphique existant et sauvegarde les limites actuelles
+        destroyChart();
+
+        // Met à jour la période actuelle
+        currentPeriod = period;
+
         fetch(url)
             .then(response => response.json())
             .then(data => {
@@ -93,7 +130,6 @@
                                     wheel: {
                                         enabled: true,
                                         speed: 0.1,
-                                        modifierKey: 'ctrl',
                                     },
                                     pinch: {
                                         enabled: true
@@ -108,68 +144,47 @@
                         }
                     }
                 });
-            });
+
+                // Appliquer les limites sauvegardées si elles existent pour la période actuelle
+                if (chartLimits[currentPeriod]) {
+                    window.myChart.options.scales.x.min = chartLimits[currentPeriod].xMin;
+                    window.myChart.options.scales.x.max = chartLimits[currentPeriod].xMax;
+                    window.myChart.options.scales.y.min = chartLimits[currentPeriod].yMin;
+                    window.myChart.options.scales.y.max = chartLimits[currentPeriod].yMax;
+                    window.myChart.update(); // Mettre à jour le graphique
+                }
+            })
+            .catch(error => console.error('Erreur lors du chargement des données :', error));
     };
 
     // Écouteurs d'événements pour les boutons
-    document.getElementById('aujourdhui-link').addEventListener('click', () => createChart('/chart-data-jour/', 2));
-    document.getElementById('semaine-link').addEventListener('click', () => createChart('/chart-data-semaine/', 2));
-    document.getElementById('mois-link').addEventListener('click', () => createChart('/chart-data-mois/', 2));
+    document.getElementById('aujourdhui-link').addEventListener('click', () => createChart('/chart-data-jour/', 2, 'aujourdhui'));
+    document.getElementById('semaine-link').addEventListener('click', () => createChart('/chart-data-semaine/', 2, 'semaine'));
+    document.getElementById('mois-link').addEventListener('click', () => createChart('/chart-data-mois/', 2, 'mois'));
 
     // Fonction pour zoomer
     document.getElementById('zoom-in').addEventListener('click', () => {
         if (window.myChart) {
-            const xScale = window.myChart.scales.x;
-            const yScale = window.myChart.scales.y;
-
-            // Calculer les nouvelles limites pour zoomer
-            const xRange = xScale.max - xScale.min;
-            const yRange = yScale.max - yScale.min;
-            const zoomFactor = 0.9; // Zoom in de 10%
-
-            xScale.options.min = xScale.min + xRange * (1 - zoomFactor) / 2;
-            xScale.options.max = xScale.max - xRange * (1 - zoomFactor) / 2;
-            yScale.options.min = yScale.min + yRange * (1 - zoomFactor) / 2;
-            yScale.options.max = yScale.max - yRange * (1 - zoomFactor) / 2;
-
-            window.myChart.update(); // Mettre à jour le graphique
+            window.myChart.zoom(1.1); // Zoom in de 10%
         }
     });
 
     // Fonction pour dézoomer
     document.getElementById('zoom-out').addEventListener('click', () => {
         if (window.myChart) {
-            const xScale = window.myChart.scales.x;
-            const yScale = window.myChart.scales.y;
-
-            // Calculer les nouvelles limites pour dézoomer
-            const xRange = xScale.max - xScale.min;
-            const yRange = yScale.max - yScale.min;
-            const zoomFactor = 1.1; // Zoom out de 10%
-
-            xScale.options.min = xScale.min - xRange * (zoomFactor - 1) / 2;
-            xScale.options.max = xScale.max + xRange * (zoomFactor - 1) / 2;
-            yScale.options.min = yScale.min - yRange * (zoomFactor - 1) / 2;
-            yScale.options.max = yScale.max + yRange * (zoomFactor - 1) / 2;
-
-            window.myChart.update(); // Mettre à jour le graphique
+            window.myChart.zoom(0.9); // Zoom out de 10%
         }
     });
 
     // Fonction pour réinitialiser le zoom
     document.getElementById('reset-zoom').addEventListener('click', () => {
         if (window.myChart) {
-            // Réinitialiser les limites des axes
-            window.myChart.options.scales.x.min = null;
-            window.myChart.options.scales.x.max = null;
-            window.myChart.options.scales.y.min = null;
-            window.myChart.options.scales.y.max = null;
-            window.myChart.update(); // Mettre à jour le graphique
+            window.myChart.resetZoom(); // Réinitialiser le zoom
         }
     });
 
     // Charge initiale du graphique
-    createChart('/chart-data/', 2);
+    createChart('/chart-data/', 2, 'aujourdhui');
 </script>
 
 <!-- Styles CSS personnalisés -->
