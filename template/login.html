@@ -1,107 +1,213 @@
-{% extends 'authen.html' %}
+{% extends 'base.html' %}
 {% block content %}
 {% load static %}
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-    <div class="card p-4 shadow-lg" style="width: 100%; max-width: 600px; border-radius: 50px; background: rgba(129, 253, 245, 0.9); backdrop-filter: blur(4px);">
-        <div class="text-center mb-4">
-            <img src="{% static 'images/depos.jpg' %}" alt="IT Logo" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 20px;">
-            <h3 class="text-center mb-4 text-primary">Connexion</h3>
-        </div>
-        {% if message %}
-            <div class="alert alert-danger text-center animate__animated animate__fadeInDown">
-                {{ message }}
-            </div>
-        {% endif %}
-        <form method="POST">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="username" class="form-label">
-                    <i class="fas fa-user fa-lg me-2"></i> Nom d'utilisateur
-                </label>
-                <input type="text" class="form-control" id="username" name="username" required>
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">
-                    <i class="fas fa-lock fa-lg me-2"></i> Mot de passe
-                </label>
-                <input type="password" class="form-control" id="password" name="password" required>
-            </div>
-            <button type="submit" class="btn btn-primary w-100 py-2 mb-3" style="background: linear-gradient(135deg, #6a11cb, #2575fc); border: none;">
-                <i class="fas fa-sign-in-alt me-2"></i> Se connecter
-            </button>
-            <!-- Lien "Mot de passe oublié ?" -->
-            <div class="text-center mb-3">
-                <a href="#" class="text-decoration-none text-primary">Mot de passe oublié ?</a>
-            </div>
-        </form>
-        <!-- Option "Créer un compte" -->
-        <div class="text-center">
-            <p class="mb-0">Pas encore de compte ? <a href="#" class="text-decoration-none text-primary">Créer un compte</a></p>
-        </div>
-    </div>
-</div>
 
 <!-- Styles CSS personnalisés -->
 <style>
     body {
-        background-image: url("{% static 'images/pngt.png' %}");
+        background-image: linear-gradient(to bottom right, rgba(77, 228, 248, 0.7), rgba(0, 0, 0, 0.7)),
+                          url("{% static 'images/iot.jpg' %}");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
         background-attachment: fixed;
-        font-family: 'Roboto', sans-serif;
+        color: white;
+        font-family: 'Poppins', sans-serif;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        overflow: hidden;
+        position: relative;
     }
 
-    .card {
+    /* Overlay sombre pour améliorer la lisibilité */
+    body::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6); /* Fond sombre pour contraster avec le texte */
+        z-index: 1;
+    }
+
+    .content {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 50px;
+        border-radius: 20px;
+        backdrop-filter: blur(15px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        max-width: 600px;
+        width: 100%;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+        animation: fadeIn 1.5s ease-out;
+    }
+
+    h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 30px;
+        animation: fadeInDown 1s ease-out;
+        color: white;
+        text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5); /* Ombre du texte */
+    }
+
+    .btn-custom {
+        padding: 15px 40px;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: white;
+        background-color: #007bff;
         border: none;
-        border-radius: 15px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 50px;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0px 6px 15px rgba(0, 123, 255, 0.5);
+        animation: fadeInUp 1s ease-out 1s;
+        animation-fill-mode: both;
     }
 
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
-    }
-
-    .btn-primary {
-        background: linear-gradient(135deg, #6a11cb, #2575fc);
-        border: none;
-        border-radius: 10px;
-        transition: transform 0.3s ease, background 0.3s ease;
-    }
-
-    .btn-primary:hover {
-        background: linear-gradient(135deg, #2575fc, #6a11cb);
-        transform: translateY(-2px);
-    }
-
-    .alert {
-        border-radius: 10px;
+    .btn-custom:hover {
+        background-color: #0056b3;
+        transform: scale(1.1);
+        box-shadow: 0px 8px 20px rgba(0, 123, 255, 0.7);
     }
 
     .form-control {
-        border-radius: 10px;
-        padding: 10px;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        border-radius: 15px;
+        color: white;
+        padding: 15px;
+        margin-bottom: 20px;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
     }
 
     .form-control:focus {
-        border-color: #6a11cb;
-        box-shadow: 0 0 5px rgba(106, 17, 203, 0.5);
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
     }
 
-    .text-primary {
-        color: #6a11cb !important;
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1.2rem;
+    }
+
+    .alert {
+        border-radius: 15px;
+        background: rgba(255, 99, 71, 0.8);
+        color: white;
+        border: none;
+        padding: 15px;
+        font-size: 1.2rem;
+        animation: fadeInDown 0.5s ease-out;
+    }
+
+    .text-links {
+        font-size: 1.2rem;
+        margin-top: 20px;
+    }
+
+    .text-links a {
+        color: #007bff;
+        text-decoration: none;
         transition: color 0.3s ease;
     }
 
-    .text-primary:hover {
-        color: #2575fc !important;
+    .text-links a:hover {
+        color: #0056b3;
     }
 
-    .fa-lg {
-        font-size: 1.25rem;
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 </style>
-{% endblock content %}
+
+<!-- Contenu principal -->
+<div class="content">
+    <h1>Connexion</h1>
+
+    <!-- Afficher les messages d'erreur -->
+    {% if message %}
+        <div class="alert alert-danger text-center animate__animated animate__fadeInDown">
+            {{ message }}
+        </div>
+    {% endif %}
+
+    <!-- Formulaire de connexion -->
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <input type="text" class="form-control" id="username" name="username" placeholder="Nom d'utilisateur" required>
+        </div>
+        <div class="mb-3">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Mot de passe" required>
+        </div>
+        <button type="submit" class="btn btn-custom w-100">
+            <i class="fas fa-sign-in-alt me-2"></i> Se connecter
+        </button>
+    </form>
+
+    <!-- Lien "Mot de passe oublié ?" et "Créer un compte" -->
+    <div class="text-links">
+        <p>
+            <a href="#">Mot de passe oublié ?</a> |
+            <a href="#">Créer un compte</a>
+        </p>
+    </div>
+</div>
+
+<!-- Effet de particules -->
+<div class="particles">
+    <div class="particle" style="top: 10%; left: 20%; animation-delay: 0s;"></div>
+    <div class="particle" style="top: 30%; left: 50%; animation-delay: 1s;"></div>
+    <div class="particle" style="top: 70%; left: 80%; animation-delay: 2s;"></div>
+    <div class="particle" style="top: 50%; left: 10%; animation-delay: 3s;"></div>
+    <div class="particle" style="top: 90%; left: 40%; animation-delay: 4s;"></div>
+</div>
+
+<!-- Scripts pour les animations -->
+<script>
+    // Effet de particules
+    const particlesContainer = document.querySelector('.particles');
+    for (let i = 0; i < 10; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        particlesContainer.appendChild(particle);
+
+    }
+</script>
+
+{% endblock %}
